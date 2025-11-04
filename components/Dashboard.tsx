@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { useAppContext } from '../App';
+import { useAppContext, useTranslation } from '../App';
 import { NegotiationStatus } from '../types';
 import { UserGroupIcon } from './icons/UserGroupIcon';
 import { BriefcaseIcon } from './icons/BriefcaseIcon';
@@ -8,6 +9,7 @@ import { CalendarIcon } from './icons/CalendarIcon';
 
 const Dashboard = ({ setScreen }: { setScreen: (screen: any) => void }) => {
   const { clients, negotiations, schedules, negotiationProducts } = useAppContext();
+  const { t } = useTranslation();
 
   const openNegotiations = negotiations.filter(n => n.status === NegotiationStatus.OPEN).length;
   const wonNegotiations = negotiations.filter(n => n.status === NegotiationStatus.WON);
@@ -38,41 +40,41 @@ const Dashboard = ({ setScreen }: { setScreen: (screen: any) => void }) => {
     </div>
   );
   
-  const getClientName = (clientId: number) => clients.find(c => c.id === clientId)?.name || 'Unknown Client';
+  const getClientName = (clientId: number) => clients.find(c => c.id === clientId)?.name || t('dashboard.unknownClient');
   const formatDate = (isoString: string) => new Date(isoString).toLocaleString();
 
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Dashboard</h1>
+      <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">{t('dashboard.title')}</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard 
             icon={<UserGroupIcon className="w-6 h-6 text-white" />} 
-            title="Total Clients" 
+            title={t('dashboard.totalClients')} 
             value={clients.length} 
             color="bg-blue-500"
         />
         <StatCard 
             icon={<BriefcaseIcon className="w-6 h-6 text-white" />} 
-            title="Open Negotiations" 
+            title={t('dashboard.openNegotiations')} 
             value={openNegotiations} 
             color="bg-yellow-500"
         />
         <StatCard 
             icon={<DollarSignIcon className="w-6 h-6 text-white" />} 
-            title="Total Revenue (Won)" 
+            title={t('dashboard.totalRevenue')} 
             value={totalRevenue.toLocaleString('en-US', { style: 'currency', currency: 'USD' })} 
             color="bg-green-500"
         />
         <StatCard 
             icon={<CalendarIcon className="w-6 h-6 text-white" />} 
-            title="Upcoming Appointments" 
+            title={t('dashboard.upcomingAppointments')} 
             value={upcomingAppointments.length} 
             color="bg-purple-500"
         />
       </div>
 
       <div className="mt-8 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-        <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Upcoming Appointments</h2>
+        <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">{t('dashboard.upcomingAppointmentsTitle')}</h2>
         {upcomingAppointments.length > 0 ? (
           <ul className="space-y-4">
             {upcomingAppointments.map(appointment => (
@@ -84,7 +86,7 @@ const Dashboard = ({ setScreen }: { setScreen: (screen: any) => void }) => {
                 <div className="flex justify-between items-center">
                     <div>
                         <p className="font-semibold text-gray-800 dark:text-white">{getClientName(appointment.clientId)}</p>
-                        <p className="text-sm text-gray-600 dark:text-gray-300">{appointment.type}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">{t(`enums.appointmentType.${appointment.type}`)}</p>
                     </div>
                     <p className="text-sm text-gray-500 dark:text-gray-400">{formatDate(appointment.date)}</p>
                 </div>
@@ -92,7 +94,7 @@ const Dashboard = ({ setScreen }: { setScreen: (screen: any) => void }) => {
             ))}
           </ul>
         ) : (
-          <p className="text-gray-600 dark:text-gray-300">No upcoming appointments.</p>
+          <p className="text-gray-600 dark:text-gray-300">{t('dashboard.noUpcomingAppointments')}</p>
         )}
       </div>
     </div>

@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { useAppContext } from '../App';
+import { useAppContext, useTranslation } from '../App';
 import { Product } from '../types';
 import Modal from './Modal';
 import { PlusIcon } from './icons/PlusIcon';
@@ -9,6 +9,7 @@ import { TrashIcon } from './icons/TrashIcon';
 
 const ProductsScreen = () => {
   const { products, setProducts } = useAppContext();
+  const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentProduct, setCurrentProduct] = useState<Partial<Product>>({});
   const [isEditing, setIsEditing] = useState(false);
@@ -35,7 +36,7 @@ const ProductsScreen = () => {
   };
 
   const handleDeleteProduct = (productId: string) => {
-    if(window.confirm('Are you sure you want to delete this product?')) {
+    if(window.confirm(t('products.deleteConfirm'))) {
         setProducts(products.filter(p => p.id !== productId));
     }
   };
@@ -44,10 +45,10 @@ const ProductsScreen = () => {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Products</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('products.title')}</h1>
         <button onClick={openAddModal} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg flex items-center">
           <PlusIcon className="w-5 h-5 mr-2" />
-          Add Product
+          {t('products.add')}
         </button>
       </div>
 
@@ -55,8 +56,8 @@ const ProductsScreen = () => {
         <table className="min-w-full leading-normal">
           <thead>
             <tr>
-              <th className="px-5 py-3 border-b-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Name</th>
-              <th className="px-5 py-3 border-b-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Price</th>
+              <th className="px-5 py-3 border-b-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">{t('products.table.name')}</th>
+              <th className="px-5 py-3 border-b-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">{t('products.table.price')}</th>
               <th className="px-5 py-3 border-b-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700"></th>
             </tr>
           </thead>
@@ -79,17 +80,17 @@ const ProductsScreen = () => {
         </table>
       </div>
       
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={isEditing ? "Edit Product" : "Add Product"}>
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={isEditing ? t('products.modal.editTitle') : t('products.modal.addTitle')}>
         <div className="space-y-4">
           <div className="grid grid-cols-3 gap-4 items-center">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Product Name</label>
-            <input type="text" placeholder="Product Name" value={currentProduct.name || ''} onChange={e => setCurrentProduct({ ...currentProduct, name: e.target.value })} className="col-span-2 w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('products.modal.name')}</label>
+            <input type="text" placeholder={t('products.modal.name')} value={currentProduct.name || ''} onChange={e => setCurrentProduct({ ...currentProduct, name: e.target.value })} className="col-span-2 w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
           </div>
           <div className="grid grid-cols-3 gap-4 items-center">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Price</label>
-            <input type="number" placeholder="Price" value={currentProduct.price || ''} onChange={e => setCurrentProduct({ ...currentProduct, price: Number(e.target.value) })} className="col-span-2 w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('products.modal.price')}</label>
+            <input type="number" placeholder={t('products.modal.price')} value={currentProduct.price || ''} onChange={e => setCurrentProduct({ ...currentProduct, price: Number(e.target.value) })} className="col-span-2 w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
           </div>
-          <button onClick={handleSaveProduct} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Save</button>
+          <button onClick={handleSaveProduct} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">{t('products.modal.save')}</button>
         </div>
       </Modal>
     </div>

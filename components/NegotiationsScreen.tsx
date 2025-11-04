@@ -1,12 +1,14 @@
+
 import React from 'react';
-import { useAppContext } from '../App';
+import { useAppContext, useTranslation } from '../App';
 import { NegotiationStatus } from '../types';
 
 const NegotiationsScreen = ({ setScreen }: { setScreen: (screen: any) => void }) => {
   const { negotiations, clients } = useAppContext();
+  const { t } = useTranslation();
 
   const getClientName = (clientId: number) => {
-    return clients.find(c => c.id === clientId)?.name || 'Unknown Client';
+    return clients.find(c => c.id === clientId)?.name || t('negotiations.unknownClient');
   };
   
   const formatDate = (isoString: string) => {
@@ -21,17 +23,17 @@ const NegotiationsScreen = ({ setScreen }: { setScreen: (screen: any) => void })
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Negotiations</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('negotiations.title')}</h1>
       </div>
 
       <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
         <table className="min-w-full leading-normal">
           <thead>
             <tr>
-              <th className="px-5 py-3 border-b-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Description</th>
-              <th className="px-5 py-3 border-b-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Client</th>
-              <th className="px-5 py-3 border-b-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Status</th>
-              <th className="px-5 py-3 border-b-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Created At</th>
+              <th className="px-5 py-3 border-b-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">{t('negotiations.table.description')}</th>
+              <th className="px-5 py-3 border-b-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">{t('negotiations.table.client')}</th>
+              <th className="px-5 py-3 border-b-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">{t('negotiations.table.status')}</th>
+              <th className="px-5 py-3 border-b-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">{t('negotiations.table.createdAt')}</th>
             </tr>
           </thead>
           <tbody>
@@ -50,7 +52,7 @@ const NegotiationsScreen = ({ setScreen }: { setScreen: (screen: any) => void })
                     <span aria-hidden className={`absolute inset-0 ${
                       neg.status === NegotiationStatus.WON ? 'bg-green-200' : neg.status === NegotiationStatus.LOST ? 'bg-red-200' : 'bg-yellow-200'
                     } opacity-50 rounded-full`}></span>
-                    <span className="relative">{neg.status}</span>
+                    <span className="relative">{t(`enums.negotiationStatus.${neg.status}`)}</span>
                   </span>
                 </td>
                 <td className="px-5 py-4 border-b border-gray-200 dark:border-gray-700 text-sm">

@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { useAppContext } from '../App';
+import { useAppContext, useTranslation } from '../App';
 import { NegotiationProduct, NegotiationStatus } from '../types';
 import Modal from './Modal';
 import { PlusIcon } from './icons/PlusIcon';
@@ -18,6 +18,7 @@ const NegotiationDetail: React.FC<NegotiationDetailProps> = ({ negotiationId, se
     products, 
     negotiationProducts, setNegotiationProducts 
   } = useAppContext();
+  const { t } = useTranslation();
 
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState<string>(products[0]?.id || '');
@@ -27,7 +28,7 @@ const NegotiationDetail: React.FC<NegotiationDetailProps> = ({ negotiationId, se
   const negotiation = negotiations.find(n => n.id === negotiationId);
 
   if (!negotiation) {
-    return <div>Negotiation not found. <button onClick={() => setScreen({ name: 'negotiations' })}>Go back</button></div>;
+    return <div>{t('negotiationDetail.notFound')} <button onClick={() => setScreen({ name: 'negotiations' })}>{t('negotiationDetail.goBack')}</button></div>;
   }
 
   const client = clients.find(c => c.id === negotiation.clientId);
@@ -82,7 +83,7 @@ const NegotiationDetail: React.FC<NegotiationDetailProps> = ({ negotiationId, se
   return (
     <div>
       <button onClick={() => setScreen({ name: 'negotiations' })} className="mb-4 text-blue-600 dark:text-blue-400 hover:underline">
-        &larr; Back to Negotiations
+        &larr; {t('negotiationDetail.back')}
       </button>
 
       <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 mb-6">
@@ -93,18 +94,18 @@ const NegotiationDetail: React.FC<NegotiationDetailProps> = ({ negotiationId, se
                     className="text-lg text-gray-600 dark:text-gray-300 cursor-pointer hover:underline"
                     onClick={() => setScreen({ name: 'client-detail', clientId: client?.id })}
                 >
-                    Client: {client?.name || 'Unknown'}
+                    {t('negotiationDetail.client')}: {client?.name || t('negotiationDetail.unknownClient')}
                 </p>
             </div>
             <div className="flex items-center space-x-2">
-                <span className="text-sm font-medium text-gray-600 dark:text-gray-300">Status:</span>
+                <span className="text-sm font-medium text-gray-600 dark:text-gray-300">{t('negotiationDetail.status')}:</span>
                 <select 
                     value={negotiation.status} 
                     onChange={e => handleStatusChange(e.target.value as NegotiationStatus)}
                     className="p-1 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white text-sm"
                 >
                     {Object.values(NegotiationStatus).map(status => (
-                        <option key={status} value={status}>{status}</option>
+                        <option key={status} value={status}>{t(`enums.negotiationStatus.${status}`)}</option>
                     ))}
                 </select>
             </div>
@@ -114,9 +115,9 @@ const NegotiationDetail: React.FC<NegotiationDetailProps> = ({ negotiationId, se
       {/* Products in Negotiation */}
       <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white">Products</h2>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t('negotiationDetail.products')}</h2>
           <button onClick={openProductModal} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded-lg flex items-center text-sm">
-            <PlusIcon className="w-4 h-4 mr-1" /> Add Product
+            <PlusIcon className="w-4 h-4 mr-1" /> {t('negotiationDetail.addProduct')}
           </button>
         </div>
         
@@ -124,11 +125,11 @@ const NegotiationDetail: React.FC<NegotiationDetailProps> = ({ negotiationId, se
             <table className="min-w-full">
                 <thead>
                     <tr>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Product</th>
-                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Quantity</th>
-                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Unit Price</th>
-                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Discount</th>
-                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Subtotal</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">{t('negotiationDetail.table.product')}</th>
+                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">{t('negotiationDetail.table.quantity')}</th>
+                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">{t('negotiationDetail.table.unitPrice')}</th>
+                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">{t('negotiationDetail.table.discount')}</th>
+                        <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">{t('negotiationDetail.table.subtotal')}</th>
                         <th className="px-4 py-2"></th>
                     </tr>
                 </thead>
@@ -152,7 +153,7 @@ const NegotiationDetail: React.FC<NegotiationDetailProps> = ({ negotiationId, se
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colSpan={4} className="px-4 py-3 text-right font-bold text-gray-700 dark:text-gray-200">Total</td>
+                        <td colSpan={4} className="px-4 py-3 text-right font-bold text-gray-700 dark:text-gray-200">{t('negotiationDetail.total')}</td>
                         <td className="px-4 py-3 text-right font-bold text-lg text-gray-900 dark:text-white">
                             {total.toLocaleString('en-US', {style: 'currency', currency: 'USD'})}
                         </td>
@@ -162,21 +163,21 @@ const NegotiationDetail: React.FC<NegotiationDetailProps> = ({ negotiationId, se
             </table>
         </div>
         {productsInNegotiation.length === 0 && (
-            <p className="text-center py-4 text-gray-500 dark:text-gray-400">No products added yet.</p>
+            <p className="text-center py-4 text-gray-500 dark:text-gray-400">{t('negotiationDetail.noProducts')}</p>
         )}
       </div>
 
        {/* Add Product Modal */}
-      <Modal isOpen={isProductModalOpen} onClose={() => setIsProductModalOpen(false)} title="Add Product to Negotiation">
+      <Modal isOpen={isProductModalOpen} onClose={() => setIsProductModalOpen(false)} title={t('negotiationDetail.productModal.title')}>
         <div className="space-y-4">
           <div className="grid grid-cols-3 gap-4 items-center">
-            <label htmlFor="product-select" className="text-sm font-medium text-gray-700 dark:text-gray-300">Product</label>
+            <label htmlFor="product-select" className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('negotiationDetail.productModal.product')}</label>
             <select id="product-select" value={selectedProductId} onChange={e => setSelectedProductId(e.target.value)} className="col-span-2 w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
               {products.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
             </select>
           </div>
            <div className="grid grid-cols-3 gap-4 items-center">
-            <label htmlFor="product-price" className="text-sm font-medium text-gray-700 dark:text-gray-300">Price</label>
+            <label htmlFor="product-price" className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('negotiationDetail.productModal.price')}</label>
             <input
               id="product-price"
               type="text"
@@ -186,14 +187,14 @@ const NegotiationDetail: React.FC<NegotiationDetailProps> = ({ negotiationId, se
             />
           </div>
           <div className="grid grid-cols-3 gap-4 items-center">
-            <label htmlFor="product-quantity" className="text-sm font-medium text-gray-700 dark:text-gray-300">Quantity</label>
-            <input id="product-quantity" type="number" min="1" placeholder="Quantity" value={quantity} onChange={e => setQuantity(Number(e.target.value))} className="col-span-2 w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+            <label htmlFor="product-quantity" className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('negotiationDetail.productModal.quantity')}</label>
+            <input id="product-quantity" type="number" min="1" placeholder={t('negotiationDetail.productModal.quantity')} value={quantity} onChange={e => setQuantity(Number(e.target.value))} className="col-span-2 w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
           </div>
           <div className="grid grid-cols-3 gap-4 items-center">
-            <label htmlFor="product-discount" className="text-sm font-medium text-gray-700 dark:text-gray-300">Discount</label>
-            <input id="product-discount" type="number" min="0" placeholder="Discount (value)" value={discount} onChange={e => setDiscount(Number(e.target.value))} className="col-span-2 w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+            <label htmlFor="product-discount" className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('negotiationDetail.productModal.discount')}</label>
+            <input id="product-discount" type="number" min="0" placeholder={t('negotiationDetail.productModal.discountPlaceholder')} value={discount} onChange={e => setDiscount(Number(e.target.value))} className="col-span-2 w-full p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
           </div>
-          <button onClick={handleAddProduct} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Add Product</button>
+          <button onClick={handleAddProduct} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">{t('negotiationDetail.productModal.add')}</button>
         </div>
       </Modal>
     </div>
