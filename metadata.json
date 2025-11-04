@@ -1,0 +1,5 @@
+{
+  "name": "Simple CRM",
+  "description": "A simple Customer Relationship Management (CRM) application to manage clients, contacts, negotiations, and schedules. All data is stored locally in your browser.",
+  "requestFramePermissions": []
+}
